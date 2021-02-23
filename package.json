@@ -2,7 +2,7 @@
   "name": "phaser-dude",
   "version": "1.0.0",
   "description": "A tutorial for Phaser.js",
-  "main": "index.js",
+  "main": "src/ts/index.ts",
   "license": "MIT",
   "scripts": {
     "dev": "webpack-dev-server --mode development",

@@ -1,3 +1,4 @@
+// refer: http://js.studio-kingdom.com/typescript/project_configuration/compiler_options
 {
   "compilerOptions": {
     "target": "ES6",

@@ -1,5 +1,5 @@
 import 'phaser'
-import "../css/index.css";
+import '../css/index.css'
 import Main from './scenes/main'
 
 const config: Phaser.Types.Core.GameConfig = {
