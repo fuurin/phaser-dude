@@ -1,0 +1,33 @@
+{
+  "image": [
+    [
+      "bomb",
+      "./assets/images/bomb.png"
+    ],
+    [
+      "platform",
+      "./assets/images/platform.png"
+    ],
+    [
+      "sky",
+      "./assets/images/sky.png"
+    ],
+    [
+      "star",
+      "./assets/images/star.png"
+    ]
+  ],
+  "audio": [],
+  "spritesheet": [
+    [
+      "dude",
+      "./assets/images/dude.png",
+      {
+        "frameWidth": 32,
+        "frameHeight": 48,
+        "startFrame": 0,
+        "endFrame": 8
+      }
+    ]
+  ]
+}
