@@ -15,12 +15,6 @@ const config: Phaser.Types.Core.GameConfig = {
   scene: Main
 }
 
-export class Game extends Phaser.Game {
-  constructor(config: Phaser.Types.Core.GameConfig) {
-    super(config)
-  }
-}
-
 window.addEventListener('load', () => {
-  new Game(config)
+  new Phaser.Game(config)
 })
