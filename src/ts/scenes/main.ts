@@ -1,8 +1,9 @@
 import loadAssets from '../assets/loadAssets'
 
 export default class Main extends Phaser.Scene {
-  private player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys
+  private player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
+  private stars: Phaser.Physics.Arcade.Group
 
   constructor() {
     super({
@@ -21,12 +22,24 @@ export default class Main extends Phaser.Scene {
   }
 
   create(): void {
+    this.cursors = this.input.keyboard.createCursorKeys()
+
     this.createSky()
     const platforms = this.createPlatform()
+
     this.player = this.createPlayer()
     this.physics.add.collider(this.player, platforms)
 
-    this.cursors = this.input.keyboard.createCursorKeys()
+    this.stars = this.createStars()
+    this.physics.add.collider(this.stars, platforms)
+
+    this.physics.add.overlap(
+      this.player,
+      this.stars,
+      this.collectStar,
+      null,
+      this
+    )
   }
 
   update(): void {
@@ -90,5 +103,25 @@ export default class Main extends Phaser.Scene {
     })
 
     return this.anims
+  }
+
+  private createStars(): Phaser.Physics.Arcade.Group {
+    const stars = this.physics.add.group({
+      key: 'star',
+      repeat: 11,
+      setXY: { x: 12, y: 0, stepX: 70 }
+    })
+
+    stars.children.iterate((child) =>
+      (child.body as Phaser.Physics.Arcade.Body).setBounceY(
+        Phaser.Math.FloatBetween(0.4, 0.8)
+      )
+    )
+
+    return stars
+  }
+
+  private collectStar(_player, star): void {
+    star.disableBody(true, true)
   }
 }
