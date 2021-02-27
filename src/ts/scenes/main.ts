@@ -4,6 +4,8 @@ export default class Main extends Phaser.Scene {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys
   private player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
   private stars: Phaser.Physics.Arcade.Group
+  private scoreText: Phaser.GameObjects.Text
+  private score = 0
 
   constructor() {
     super({
@@ -40,6 +42,8 @@ export default class Main extends Phaser.Scene {
       null,
       this
     )
+
+    this.scoreText = this.createScoreText()
   }
 
   update(): void {
@@ -105,6 +109,13 @@ export default class Main extends Phaser.Scene {
     return this.anims
   }
 
+  private createScoreText(): Phaser.GameObjects.Text {
+    return this.add.text(16, 16, 'score: 0', {
+      fontSize: '32px',
+      color: '#000'
+    })
+  }
+
   private createStars(): Phaser.Physics.Arcade.Group {
     const stars = this.physics.add.group({
       key: 'star',
@@ -123,5 +134,7 @@ export default class Main extends Phaser.Scene {
 
   private collectStar(_player, star): void {
     star.disableBody(true, true)
+    this.score += 10
+    this.scoreText.setText(`score: ${this.score}`)
   }
 }
