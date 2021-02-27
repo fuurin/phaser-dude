@@ -2,10 +2,13 @@ import loadAssets from '../assets/loadAssets'
 
 export default class Main extends Phaser.Scene {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys
+  private platforms: Phaser.Physics.Arcade.StaticGroup
   private player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
   private stars: Phaser.Physics.Arcade.Group
+  private bombs: Phaser.Physics.Arcade.Group
   private scoreText: Phaser.GameObjects.Text
   private score = 0
+  private gameOver = false
 
   constructor() {
     super({
@@ -27,13 +30,13 @@ export default class Main extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys()
 
     this.createSky()
-    const platforms = this.createPlatform()
+    this.platforms = this.createPlatform()
 
     this.player = this.createPlayer()
-    this.physics.add.collider(this.player, platforms)
+    this.physics.add.collider(this.player, this.platforms)
 
     this.stars = this.createStars()
-    this.physics.add.collider(this.stars, platforms)
+    this.physics.add.collider(this.stars, this.platforms)
 
     this.physics.add.overlap(
       this.player,
@@ -42,6 +45,10 @@ export default class Main extends Phaser.Scene {
       null,
       this
     )
+
+    this.bombs = this.physics.add.group()
+    this.physics.add.collider(this.bombs, this.platforms)
+    this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this)
 
     this.scoreText = this.createScoreText()
   }
@@ -123,10 +130,8 @@ export default class Main extends Phaser.Scene {
       setXY: { x: 12, y: 0, stepX: 70 }
     })
 
-    stars.children.iterate((child) =>
-      (child.body as Phaser.Physics.Arcade.Body).setBounceY(
-        Phaser.Math.FloatBetween(0.4, 0.8)
-      )
+    stars.children.iterate((child: Phaser.Physics.Arcade.Image) =>
+      child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
     )
 
     return stars
@@ -136,5 +141,31 @@ export default class Main extends Phaser.Scene {
     star.disableBody(true, true)
     this.score += 10
     this.scoreText.setText(`score: ${this.score}`)
+
+    if (this.stars.countActive(true) === 0) {
+      this.stars.children.iterate((child: Phaser.Physics.Arcade.Image) => {
+        child.enableBody(true, child.x, 0, true, true)
+      })
+      this.createBomb()
+    }
+  }
+
+  private createBomb(): void {
+    const bombX =
+      this.player.x < 400
+        ? Phaser.Math.Between(400, 800)
+        : Phaser.Math.Between(0, 400)
+
+    const bomb = this.bombs.create(bombX, 16, 'bomb')
+    bomb.setBounce(1)
+    bomb.setCollideWorldBounds(true)
+    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20)
+  }
+
+  private hitBomb(): void {
+    this.physics.pause()
+    this.player.setTint(0xff0000)
+    this.player.anims.play('turn')
+    this.gameOver = true
   }
 }
