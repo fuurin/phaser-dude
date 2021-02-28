@@ -4,5 +4,6 @@ node_modules/
 public/*
 !public/assets
 .firebase/
+.firebaserc
 firebase-debug.log
 phaser-dude-rails/
