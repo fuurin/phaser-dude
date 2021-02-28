@@ -1,7 +1,23 @@
 import loadAssets from '../assets/loadAssets'
 
+interface CusrorButtons {
+  left: Phaser.GameObjects.Image
+  right: Phaser.GameObjects.Image
+  up: Phaser.GameObjects.Image
+  down: Phaser.GameObjects.Image
+}
+
 export default class Main extends Phaser.Scene {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys
+  private buttonInputs = {
+    left: false,
+    right: false,
+    up: false,
+    down: false,
+    restart: false
+  }
+  private cursorButtons: CusrorButtons
+  private restartButton: Phaser.GameObjects.Image
   private platforms: Phaser.Physics.Arcade.StaticGroup
   private player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody
   private stars: Phaser.Physics.Arcade.Group
@@ -51,28 +67,35 @@ export default class Main extends Phaser.Scene {
     this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this)
 
     this.scoreText = this.createScoreText()
+    this.cursorButtons = this.createCursorButtons()
+    this.restartButton = this.createRestartButton()
   }
 
   update(): void {
     if (!this.gameOver) {
-      if (this.cursors.left.isDown) {
-        this.player.setVelocityX(-160)
+      if (this.cursors.left.isDown || this.buttonInputs.left) {
+        this.player.setVelocityX(-250)
         this.player.anims.play('left', true)
-      } else if (this.cursors.right.isDown) {
-        this.player.setVelocityX(160)
+      } else if (this.cursors.right.isDown || this.buttonInputs.right) {
+        this.player.setVelocityX(250)
         this.player.anims.play('right', true)
       } else {
         this.player.setVelocityX(0)
         this.player.anims.play('turn')
       }
-      if (this.cursors.up.isDown && this.player.body.touching.down) {
-        this.player.setVelocityY(-330)
+
+      if (this.player.body.touching.down) {
+        if (this.cursors.up.isDown || this.buttonInputs.up) {
+          this.player.setVelocityY(-500)
+        }
+      } else {
+        if (this.cursors.down.isDown || this.buttonInputs.down) {
+          this.player.setVelocityY(800)
+        }
       }
-    } else {
-      if (this.cursors.space.isDown) {
-        this.scene.restart()
-        this.resetStates()
-      }
+    } else if (this.cursors.space.isDown || this.buttonInputs.restart) {
+      this.scene.restart()
+      this.gameOver = false
     }
   }
 
@@ -93,7 +116,7 @@ export default class Main extends Phaser.Scene {
 
   private createPlayer(): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
     const player = this.physics.add.sprite(100, 450, 'dude')
-    player.setBounce(0.2)
+    player.setBounce(0.1)
     player.setCollideWorldBounds(true)
     this.createPlayerAnimations()
     return player
@@ -124,7 +147,8 @@ export default class Main extends Phaser.Scene {
   }
 
   private createScoreText(): Phaser.GameObjects.Text {
-    return this.add.text(16, 16, 'score: 0', {
+    this.score = 0
+    return this.add.text(16, 16, `score: ${this.score}`, {
       fontSize: '32px',
       color: '#000'
     })
@@ -174,11 +198,42 @@ export default class Main extends Phaser.Scene {
     this.player.setTint(0xff0000)
     this.player.anims.play('turn')
     this.gameOver = true
+    this.restartButton.setVisible(true)
   }
 
-  private resetStates(): void {
-    this.score = 0
-    this.scoreText.setText(`score: ${this.score}`)
-    this.gameOver = false
+  private createCursorButtons(): CusrorButtons {
+    const buttons = {
+      left: this.add.image(50, 570, 'arrow').setRotation(Phaser.Math.PI2 / 2),
+      right: this.add.image(100, 570, 'arrow'),
+      up: this.add.image(720, 570, 'arrow').setRotation(-Phaser.Math.PI2 / 4),
+      down: this.add.image(670, 570, 'arrow').setRotation(Phaser.Math.PI2 / 4)
+    }
+
+    for (const [direction, button] of Object.entries(buttons)) {
+      button
+        .setInteractive()
+        .on('pointerdown', () => {
+          button.setTint(0xffff00)
+          this.buttonInputs[direction] = true
+        })
+        .on('pointerup', () => {
+          button.setTint(0xffffff)
+          this.buttonInputs[direction] = false
+        })
+    }
+    return buttons
+  }
+
+  private createRestartButton(): Phaser.GameObjects.Image {
+    return this.add
+      .image(750, 35, 'reload')
+      .setInteractive()
+      .on('pointerdown', () => {
+        this.buttonInputs.restart = true
+      })
+      .on('pointerup', () => {
+        this.buttonInputs.restart = false
+      })
+      .setVisible(false)
   }
 }
