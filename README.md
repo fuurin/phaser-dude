@@ -3,7 +3,7 @@
 学習用ScrapBox
 https://scrapbox.io/programming-technology/Phaser.jsでゲームを作る
 
-導入
+導入からデプロイまで
 ``` bash
 npmパッケージ取得
 $ yarn
@@ -13,6 +13,9 @@ $ yarn dev
 
 webpackビルド
 $ yarn build
+
+firebaseにデプロイ (要 npm i -g firebase-tools & firebase login)
+$ firebase deploy
 ```
 
 アセット類は`public/assets`以下に配置します。  

@@ -3,3 +3,6 @@ node_modules/
 .vscode/
 public/*
 !public/assets
+.firebase/
+firebase-debug.log
+phaser-dude-rails/
