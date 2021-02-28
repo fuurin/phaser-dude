@@ -54,18 +54,25 @@ export default class Main extends Phaser.Scene {
   }
 
   update(): void {
-    if (this.cursors.left.isDown) {
-      this.player.setVelocityX(-160)
-      this.player.anims.play('left', true)
-    } else if (this.cursors.right.isDown) {
-      this.player.setVelocityX(160)
-      this.player.anims.play('right', true)
+    if (!this.gameOver) {
+      if (this.cursors.left.isDown) {
+        this.player.setVelocityX(-160)
+        this.player.anims.play('left', true)
+      } else if (this.cursors.right.isDown) {
+        this.player.setVelocityX(160)
+        this.player.anims.play('right', true)
+      } else {
+        this.player.setVelocityX(0)
+        this.player.anims.play('turn')
+      }
+      if (this.cursors.up.isDown && this.player.body.touching.down) {
+        this.player.setVelocityY(-330)
+      }
     } else {
-      this.player.setVelocityX(0)
-      this.player.anims.play('turn')
-    }
-    if (this.cursors.up.isDown && this.player.body.touching.down) {
-      this.player.setVelocityY(-330)
+      if (this.cursors.space.isDown) {
+        this.scene.restart()
+        this.resetStates()
+      }
     }
   }
 
@@ -167,5 +174,11 @@ export default class Main extends Phaser.Scene {
     this.player.setTint(0xff0000)
     this.player.anims.play('turn')
     this.gameOver = true
+  }
+
+  private resetStates(): void {
+    this.score = 0
+    this.scoreText.setText(`score: ${this.score}`)
+    this.gameOver = false
   }
 }
