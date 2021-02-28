@@ -175,7 +175,7 @@ export default class Main extends Phaser.Scene {
 
     if (this.stars.countActive(true) === 0) {
       this.stars.children.iterate((child: Phaser.Physics.Arcade.Image) => {
-        child.enableBody(true, child.x, 0, true, true)
+        child.enableBody(true, child.x, Phaser.Math.Between(0, 500), true, true)
       })
       this.createBomb()
     }
