@@ -217,10 +217,6 @@ export default class Main extends Phaser.Scene {
           button.setTint(0xffff00)
           this.buttonInputs[direction] = true
         })
-        .on('pointerout', () => {
-          button.setTint(0xffffff)
-          this.buttonInputs[direction] = false
-        })
         .on('pointerup', () => {
           button.setTint(0xffffff)
           this.buttonInputs[direction] = false
