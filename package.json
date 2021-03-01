@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "webpack-dev-server --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "deploy": "webpack --mode production; firebase deploy"
   },
   "dependencies": {
     "phaser": "^3.52.0"

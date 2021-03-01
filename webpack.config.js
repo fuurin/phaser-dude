@@ -51,7 +51,7 @@ module.exports = {
     }
   },
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({ template: './src/html/index.html' }),
     new PhaserAssetsWebpackPlugin(
       [
         {

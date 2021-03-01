@@ -16,6 +16,9 @@ $ yarn build
 
 firebaseにデプロイ (要 npm i -g firebase-tools & firebase login)
 $ firebase deploy
+
+ビルドしてからデプロイ
+$ yarn deploy
 ```
 
 アセット類は`public/assets`以下に配置します。  
