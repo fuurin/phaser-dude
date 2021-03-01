@@ -43,6 +43,7 @@ export default class Main extends Phaser.Scene {
   }
 
   create(): void {
+    this.input.addPointer(2)
     this.cursors = this.input.keyboard.createCursorKeys()
 
     this.createSky()
@@ -216,6 +217,10 @@ export default class Main extends Phaser.Scene {
         .on('pointerdown', () => {
           button.setTint(0xffff00)
           this.buttonInputs[direction] = true
+        })
+        .on('pointerout', () => {
+          button.setTint(0xffffff)
+          this.buttonInputs[direction] = false
         })
         .on('pointerup', () => {
           button.setTint(0xffffff)
