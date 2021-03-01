@@ -13,8 +13,8 @@
       "./assets/images/platform.png"
     ],
     [
-      "reload",
-      "./assets/images/reload.png"
+      "restart",
+      "./assets/images/restart.png"
     ],
     [
       "sky",

@@ -95,6 +95,7 @@ export default class Main extends Phaser.Scene {
       }
     } else if (this.cursors.space.isDown || this.buttonInputs.restart) {
       this.scene.restart()
+      this.buttonInputs.restart = false
       this.gameOver = false
     }
   }
@@ -106,7 +107,7 @@ export default class Main extends Phaser.Scene {
   private createPlatform(): Phaser.Physics.Arcade.StaticGroup {
     const platforms = this.physics.add.staticGroup()
 
-    platforms.create(400, 568, 'platform').setScale(2).refreshBody()
+    platforms.create(400, 552, 'platform').setScale(3).refreshBody()
     platforms.create(600, 400, 'platform')
     platforms.create(50, 250, 'platform')
     platforms.create(750, 220, 'platform')
@@ -203,10 +204,10 @@ export default class Main extends Phaser.Scene {
 
   private createCursorButtons(): CusrorButtons {
     const buttons = {
-      left: this.add.image(50, 570, 'arrow').setRotation(Phaser.Math.PI2 / 2),
-      right: this.add.image(100, 570, 'arrow'),
-      up: this.add.image(720, 570, 'arrow').setRotation(-Phaser.Math.PI2 / 4),
-      down: this.add.image(670, 570, 'arrow').setRotation(Phaser.Math.PI2 / 4)
+      left: this.add.image(60, 550, 'arrow').setRotation(Phaser.Math.PI2 / 2),
+      right: this.add.image(150, 550, 'arrow'),
+      up: this.add.image(740, 550, 'arrow').setRotation(-Phaser.Math.PI2 / 4),
+      down: this.add.image(650, 550, 'arrow').setRotation(Phaser.Math.PI2 / 4)
     }
 
     for (const [direction, button] of Object.entries(buttons)) {
@@ -215,6 +216,14 @@ export default class Main extends Phaser.Scene {
         .on('pointerdown', () => {
           button.setTint(0xffff00)
           this.buttonInputs[direction] = true
+        })
+        .on('pointerover', () => {
+          button.setTint(0xffffff)
+          this.buttonInputs[direction] = false
+        })
+        .on('pointerout', () => {
+          button.setTint(0xffffff)
+          this.buttonInputs[direction] = false
         })
         .on('pointerup', () => {
           button.setTint(0xffffff)
@@ -226,7 +235,7 @@ export default class Main extends Phaser.Scene {
 
   private createRestartButton(): Phaser.GameObjects.Image {
     return this.add
-      .image(750, 35, 'reload')
+      .image(750, 50, 'restart')
       .setInteractive()
       .on('pointerdown', () => {
         this.buttonInputs.restart = true
